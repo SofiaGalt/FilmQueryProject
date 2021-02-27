@@ -1,10 +1,6 @@
 package com.skilldistillery.filmquery.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,10 +10,14 @@ import com.skilldistillery.filmquery.entities.Rating;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 
+	public static DatabaseAccessorObject access = new DatabaseAccessorObject();
+	
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
 	private static String user = "student";
 	private static String pass = "student";
 	private static Connection conn = null;
+	
+	private DatabaseAccessorObject() {}
 	
 	static {
 		try {
@@ -34,20 +34,20 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		if(filmId < 1 ) return null;
 		try {
-			String sql = "SELECT * FROM film where film.id = ?";
+			String sql = "SELECT * FROM film where film.id = ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, filmId);
 			
 			ResultSet rs = ps.executeQuery();
-			
+
 			if(rs.next()) {
 				
-				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11) );
+				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(filmId) );
 			}
+			
 		} catch(SQLException e) {
 			System.out.println(e);
 		}
-		
 		
 		return null;
 	}
@@ -82,7 +82,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		if(filmId < 1 ) return null;
 		
 		try {
-			String sql = "select film.title, actor.* from film join film_actor on film.id = film_actor.film_id join actor on film_actor.actor_id = actor.id where film.id = ?";
+			String sql = "select * from film join film_actor on film.id = film_actor.film_id join actor on film_actor.actor_id = actor.id where film.id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, filmId);
 			
@@ -91,7 +91,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			List<Actor> cast = new LinkedList<>();
 			while(rs.next()) {
 				
-				cast.add(new Actor(rs.getInt(1), rs.getString(2), rs.getString(3) ));
+				cast.add(new Actor(rs.getInt("actor.id"), rs.getString("actor.first_name"), rs.getString("actor.last_name") ));
 			}
 			
 			return cast;
@@ -101,5 +101,31 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		
 		return null;
 	}
-
+	
+	public List<Film> findFilmByKeyword(String keyword) {
+		
+		List<Film> filmsMatchedKeyword = new LinkedList<>();
+		
+		try {
+			String sql = "select * from film where film.title like ? or film.description like ?;";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, "%" + keyword + "%");
+			ps.setString(2, "%" + keyword + "%");
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				filmsMatchedKeyword.add( new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)) ));
+			}
+			
+			return filmsMatchedKeyword;
+			
+		} catch(SQLException e) {
+			System.out.println(e + "from findFilmByKeyword!!!!!!!!!!!!!!!!!!!!!");
+			
+		}
+		
+		return null;
+	}
+	
 }

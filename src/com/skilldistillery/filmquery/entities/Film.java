@@ -1,11 +1,10 @@
 package com.skilldistillery.filmquery.entities;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class Film {
-	
-	private static HashMap<Integer, Film> films = new HashMap<>();
 	
 	private int id;
 	private String title;
@@ -20,8 +19,12 @@ public class Film {
 	private Rating rating;
 	private String specialFeatures;
 	
+	private List<Actor> cast;
+	
+	public Film() {}
+	
 	public Film(int id, String title, String description, String releaseYear, int languageId, int rentalDuration,
-			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures) {
+			double rentalRate, Integer length, double replacementCost, Rating rating, String specialFeatures, List<Actor> cast) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -34,8 +37,8 @@ public class Film {
 		this.replacementCost = replacementCost;
 		this.rating = rating;
 		this.specialFeatures = specialFeatures;
+		this.cast = cast;
 		
-		films.put(id, this);
 	}
 
 	@Override
@@ -82,6 +85,102 @@ public class Film {
 			return false;
 		Film other = (Film) obj;
 		return id == other.id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getReleaseYear() {
+		return releaseYear;
+	}
+
+	public void setReleaseYear(String releaseYear) {
+		this.releaseYear = releaseYear;
+	}
+
+	public int getLanguageId() {
+		return languageId;
+	}
+
+	public void setLanguageId(int languageId) {
+		this.languageId = languageId;
+	}
+
+	public int getRentalDuration() {
+		return rentalDuration;
+	}
+
+	public void setRentalDuration(int rentalDuration) {
+		this.rentalDuration = rentalDuration;
+	}
+
+	public double getRentalRate() {
+		return rentalRate;
+	}
+
+	public void setRentalRate(double rentalRate) {
+		this.rentalRate = rentalRate;
+	}
+
+	public Integer getLength() {
+		return length;
+	}
+
+	public void setLength(Integer length) {
+		this.length = length;
+	}
+
+	public double getReplacementCost() {
+		return replacementCost;
+	}
+
+	public void setReplacementCost(double replacementCost) {
+		this.replacementCost = replacementCost;
+	}
+
+	public Rating getRating() {
+		return rating;
+	}
+
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
+
+	public String getSpecialFeatures() {
+		return specialFeatures;
+	}
+
+	public void setSpecialFeatures(String specialFeatures) {
+		this.specialFeatures = specialFeatures;
+	}
+
+	public List<Actor> getCast() {
+		return cast;
+	}
+
+	public void setCast(List<Actor> cast) {
+		this.cast = cast;
 	}
 	
 	

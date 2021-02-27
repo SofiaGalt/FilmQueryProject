@@ -1,30 +1,29 @@
 package com.skilldistillery.filmquery.entities;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class Actor {
-
-	public static HashMap<Integer, Actor> actors = new HashMap<>();
 	
 	private int id;
 	private String firstName;
 	private String lastName;
 	
+	Actor(){}
+	
 	public Actor(int id, String firstName, String lastName) {
 		super();
+		
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		
-		actors.put(id, this);
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Actor [actors=");
-		builder.append(actors);
 		builder.append(", id=");
 		builder.append(id);
 		builder.append(", firstName=");
@@ -37,7 +36,7 @@ public class Actor {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(actors, id);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -49,8 +48,31 @@ public class Actor {
 		if (getClass() != obj.getClass())
 			return false;
 		Actor other = (Actor) obj;
-		return Objects.equals(actors, other.actors) && id == other.id;
+		return id == other.id;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	
 }

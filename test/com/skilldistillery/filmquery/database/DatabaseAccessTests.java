@@ -13,17 +13,17 @@ class DatabaseAccessTests {
 
   @BeforeEach
   void setUp() throws Exception {
-    db = new DatabaseAccessorObject();
+    
   }
 
   @AfterEach
   void tearDown() throws Exception {
-    db = null;
+    
   }
 
   @Test
   void test_getFilmById_with_invalid_id_returns_null() {
-    Film f = db.findFilmById(-42);
+    Film f = DatabaseAccessorObject.access.findFilmById(-42);
     assertNull(f);
   }
 

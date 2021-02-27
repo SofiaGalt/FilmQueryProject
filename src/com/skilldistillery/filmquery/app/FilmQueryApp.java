@@ -3,6 +3,7 @@ package com.skilldistillery.filmquery.app;
 import java.util.List;
 
 import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
+import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
 
 public class FilmQueryApp {
@@ -52,7 +53,7 @@ public class FilmQueryApp {
 			lookUpFilmByKeyword();
 			return true;
 		case "3":
-
+			terminatingProgramMessage();
 			return false;
 		default:
 			System.out.println("\nThat is not a recognized option.\n");
@@ -98,8 +99,27 @@ public class FilmQueryApp {
 	}
 
 	private void displayFilm(Film toDisplay) {
-		System.out.println("\n title: " + toDisplay.getTitle() + "\n release date: " + toDisplay.getReleaseYear()
-				+ "\n rating: " + toDisplay.getRating() + "\n description: " + toDisplay.getDescription() + "\n\n");
+		System.out.print("\n title: " + toDisplay.getTitle() 
+				+ "\n release date: " + toDisplay.getReleaseYear()
+				+ "\n rating: " + toDisplay.getRating() 
+				+ "\n language: " + toDisplay.getLanguage()
+				+ "\n description: " + toDisplay.getDescription() 
+				+ "\n cast: " + getDisplayCastString(toDisplay.getCast()) + "\n\n");
+		
+		
+	}
+	
+	private String getDisplayCastString( List<Actor> cast) {
+		StringBuilder sb = new StringBuilder();
+		
+		for(Actor a : cast) {
+			sb.append(getActorDisplayString(a) + ", ");
+		}
+		return sb.substring(0, sb.length() -2);
+	}
+	
+	private String getActorDisplayString( Actor a ) {
+		return a.getFirstName() + " "+ a.getLastName();
 	}
 
 	private void lookUpFilmByKeyword() {
@@ -113,8 +133,7 @@ public class FilmQueryApp {
 		List<Film> toDisplay = DatabaseAccessorObject.access.findFilmByKeyword(input);
 		
 		if (toDisplay == null || toDisplay.size() == 0 ) {
-			System.out.println(
-					"No result were found for your query. It's possible that the id was out of bounds for our collection of films.");
+			System.out.println("No result were found for your query.");
 			UI.pressAnyKeyToContinue();
 			return;
 		}
@@ -124,5 +143,12 @@ public class FilmQueryApp {
 			displayFilm(f);
 		}
 		UI.pressAnyKeyToContinue();
+	}
+	
+	private void terminatingProgramMessage() {
+		System.out.println("\n******************************************************************************\n");
+		  System.out.println("***    We hope you found what you were looking for!  Have a great day!     ***\n");
+		  System.out.println("******************************************************************************\n\n\n");
+		
 	}
 }

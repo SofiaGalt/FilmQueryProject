@@ -34,7 +34,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		if(filmId < 1 ) return null;
 		try {
-			String sql = "SELECT * FROM film where film.id = ?;";
+			String sql = "SELECT * FROM film join language on film.language_id = language.id where film.id = ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, filmId);
 			
@@ -42,7 +42,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 			if(rs.next()) {
 				
-				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(filmId) );
+				return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(filmId) , rs.getString("language.name"));
 			}
 			
 		} catch(SQLException e) {
@@ -107,7 +107,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		List<Film> filmsMatchedKeyword = new LinkedList<>();
 		
 		try {
-			String sql = "select * from film where film.title like ? or film.description like ?;";
+			String sql = "select * from film join language on film.language_id = language.id where film.title like ? or film.description like ?;";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + keyword + "%");
 			ps.setString(2, "%" + keyword + "%");
@@ -115,7 +115,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				filmsMatchedKeyword.add( new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)) ));
+				filmsMatchedKeyword.add( new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8), rs.getDouble(9), Rating.valueOf(rs.getString(10)), rs.getString(11), findActorsByFilmId(rs.getInt(1)), rs.getString("language.name") ));
 			}
 			
 			return filmsMatchedKeyword;

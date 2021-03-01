@@ -11,7 +11,7 @@ This app pulls data from an sql database as you query for different films! It pu
 
 This app is structured using separation of concerns as well as the MVC design pattern.
 
-The UI functionality it found in the com.skilldistillery.app directory.
+The UI functionality are contained in the com.skilldistillery.app directory.
 
 The interaction with the database is all done within the com.skilldistillery.database directory.
 
